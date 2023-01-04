@@ -47,7 +47,7 @@ class MainWindow(QMainWindow):
         font = QFont(load_font('Inter.ttf'), 30)
         font.setStyleStrategy(font.StyleStrategy.PreferAntialias)
 
-        self.setWindowTitle("Генератор выражений 1.0")
+        self.setWindowTitle("Генератор выражений 1.0.1")
 
         self.label = QLabel()
         self.label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
