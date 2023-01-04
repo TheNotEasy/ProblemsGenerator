@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(
-    ['app.py'],
+    ['C:\\ProblemsGenerator\\src\\tools\\build.py\\..\\..\\..\\src\\app.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -41,4 +41,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon=['C:\\ProblemsGenerator\\src\\assets\\Icon.ico'],
 )
