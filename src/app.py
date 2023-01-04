@@ -1,3 +1,4 @@
+import os
 import sys
 
 from PyQt6.QtCore import QSize, Qt
@@ -25,13 +26,17 @@ language = english if '-english' in sys.argv else russian
 
 
 def load_font(font):
+    application_path = os.path.dirname(__file__)
+    if getattr(sys, 'frozen', False):
+        application_path = os.path.dirname(sys.executable)
     try:
         return QFontDatabase.applicationFontFamilies(
-            QFontDatabase.addApplicationFont(font))[0]
+            QFontDatabase.addApplicationFont(f"{application_path}\\assets\\{font}"))[0]
     except IndexError:
         dialog = QMessageBox()
         dialog.setWindowTitle("Error")
-        dialog.setText(f"Font '{font}' not found, continue with default font?")
+
+        dialog.setText(f"Font '{application_path}\\assets\\{font}' not found, continue with default font?")
         dialog.setIcon(QMessageBox.Icon.Critical)
         dialog.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         button = dialog.exec()
