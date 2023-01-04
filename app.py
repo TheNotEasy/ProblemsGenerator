@@ -1,11 +1,27 @@
 import sys
 
 from PyQt6.QtCore import QSize, Qt
-from PyQt6.QtGui import QFont, QFontDatabase, QPalette, QColor, QWindow
+from PyQt6.QtGui import QFont, QFontDatabase
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, QVBoxLayout, QWidget, \
     QGridLayout, QMessageBox
 
 from logic import generate_problem, Problem, Results
+
+russian = {
+    'ANSWER': "Ответ",
+    'INPUT_WARNING': "Можно отвечать только цифрами!",
+    'CORRECT_ANSWERS': "Правильные ответы",
+    'INCORRECT_ANSWERS': "Неправильные ответы",
+}
+
+english = {
+    'ANSWER': "Answer",
+    'INPUT_WARNING': "Only numbers!",
+    'CORRECT_ANSWERS': "Correct answers",
+    'INCORRECT_ANSWERS': "Incorrect answers",
+}
+
+language = english if '-english' in sys.argv else russian
 
 
 def load_font(font):
@@ -22,11 +38,6 @@ def load_font(font):
         if button == QMessageBox.StandardButton.No:
             raise
         return 'default'
-
-
-class MenuWindow(QWindow):
-    def __init__(self):
-        super().__init__()
 
 
 class MainWindow(QMainWindow):
@@ -52,7 +63,7 @@ class MainWindow(QMainWindow):
 
         self.submit = QPushButton()
         self.submit.setFixedSize(QSize(400, 50))
-        self.submit.setText('Ответ')
+        self.submit.setText(language['ANSWER'])
         self.submit.clicked.connect(self.check_answer)
 
         self.warning_label = QLabel()
@@ -101,7 +112,7 @@ class MainWindow(QMainWindow):
 
         self.input.setText(None)
         if not answer.isnumeric():
-            self.warning_label.setText("Можно отвечать только цифрами!")
+            self.warning_label.setText(language['INPUT_WARNING'])
             return
         self.warning_label.setText(None)
         if int(answer) == self.current_problem.answer:
@@ -112,7 +123,8 @@ class MainWindow(QMainWindow):
         self.show_problem()
 
     def update_results(self):
-        text = f"Правильные ответы: {self.results.correct}\nНеправильные ответы: {self.results.incorrect}"
+        text = (f"{language['CORRECT_ANSWERS']}: {self.results.correct}"
+                f"\n{language['INCORRECT_ANSWERS']}: {self.results.incorrect}")
         self.results_label.setText(text)
 
     def keyPressEvent(self, event) -> None:
