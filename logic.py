@@ -1,4 +1,6 @@
 import random
+import sys
+import traceback
 from dataclasses import dataclass
 from enum import Enum
 from functools import cached_property
@@ -41,33 +43,32 @@ class Problem:
         return f'{self.x} {self.action.value} {self.y}'
 
 
-def generate_problem(num_range, answer_range=None):
+def generate_problem(num_range, answer_range=None, action=None):
+    if num_range <= 2:
+        raise ValueError("num_range is too small")
     try:
         x = random.randint(0, num_range)
-        action = Action.get_random((Action.DIVISION,) if num_range <= 36 else None)
+        if action is None:
+            action = Action.get_random((Action.DIVISION,) if num_range <= 10 else None)
         if action is Action.MINUS:
-            y = random.randint(0, x)
+            y = random.randint(2, x)
         elif action is Action.DIVISION:
-            if random.random() <= 0.2:
+            y = random.choice([i for i in range(2, num_range+1) if x % i == 0 if not x == i])
+            if y == 0:
                 y = 1
-            else:
-                y = random.choice([i for i in range(2, num_range+1) if x % i == 0])
-                if y == 0:
-                    y = 1
         elif action is Action.MULTIPLY:
             if x == 0:
-                y = random.randint(0, num_range)
+                y = random.randint(2, num_range)
             else:
-                if random.random() <= 0.2:
-                    y = 1
-                else:
-                    y = random.randint(2, int(answer_range / x) if answer_range else num_range)
+                y = random.randint(2, int(answer_range / x) if answer_range else num_range)
         else:
             y = random.randint(0, answer_range or num_range - x)
 
         return Problem(x, y, action)
     except Exception:
-        return generate_problem(num_range, answer_range)
+        print("Error has occured, ignoring and generate new problem", file=sys.stderr)
+        traceback.print_exc()
+        return generate_problem(num_range, answer_range, action)
 
 
 def calculate_numbers(x, y, action):
