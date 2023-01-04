@@ -3,5 +3,4 @@ dist
 venv
 .idea
 __pycache__
-app.spec
 Icon.png
